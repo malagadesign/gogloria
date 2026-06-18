@@ -97,8 +97,8 @@ En Vercel → Project → Settings → Environment Variables:
 
 | Variable | Valor |
 |---|---|
-| `DATABASE_URL` | Transaction pooler `:6543/postgres?pgbouncer=true` |
-| `DIRECT_URL` | Direct connection `:5432/postgres` |
+| `DATABASE_URL` | Transaction pooler `:6543/postgres?pgbouncer=true&connection_limit=1` |
+| `DIRECT_URL` | Session/direct pooler `:5432/postgres` (solo migraciones) |
 | `AUTH_SECRET` | Secreto único de producción |
 | `AUTH_URL` | `https://tu-dominio.vercel.app` |
 | `NEXT_PUBLIC_QR_BASE_URL` | `https://go.agenciagloria.com` |

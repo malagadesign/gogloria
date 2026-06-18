@@ -70,6 +70,8 @@ export async function createQrCode(formData: FormData) {
     return { error: "Ya existe un QR con ese slug." };
   }
 
+  let qrId: string;
+
   try {
     const destinationUrl = sanitizeUrl(parsed.data.destinationUrl);
     const campaignId = await validateCampaign(
@@ -95,15 +97,17 @@ export async function createQrCode(formData: FormData) {
       },
     });
 
-    revalidatePath("/dashboard/qrs");
-    revalidatePath("/dashboard");
-    redirect(`/dashboard/qrs/${qr.id}`);
+    qrId = qr.id;
   } catch (error) {
     return {
       error:
         error instanceof Error ? error.message : "No se pudo crear el QR.",
     };
   }
+
+  revalidatePath("/dashboard/qrs");
+  revalidatePath("/dashboard");
+  redirect(`/dashboard/qrs/${qrId}`);
 }
 
 export async function updateQrCode(qrId: string, formData: FormData) {
@@ -159,17 +163,17 @@ export async function updateQrCode(qrId: string, formData: FormData) {
         notes: parsed.data.notes || null,
       },
     });
-
-    revalidatePath("/dashboard/qrs");
-    revalidatePath(`/dashboard/qrs/${qrId}`);
-    revalidatePath(`/dashboard/clients/${existing.clientId}`);
-    redirect(`/dashboard/qrs/${qrId}`);
   } catch (error) {
     return {
       error:
         error instanceof Error ? error.message : "No se pudo actualizar el QR.",
     };
   }
+
+  revalidatePath("/dashboard/qrs");
+  revalidatePath(`/dashboard/qrs/${qrId}`);
+  revalidatePath(`/dashboard/clients/${existing.clientId}`);
+  redirect(`/dashboard/qrs/${qrId}`);
 }
 
 export type QrListFilters = {
