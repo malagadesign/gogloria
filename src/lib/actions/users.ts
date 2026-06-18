@@ -164,3 +164,32 @@ export async function updateUser(userId: string, formData: FormData) {
   revalidatePath(`/dashboard/users/${userId}/edit`);
   redirect(`/dashboard/users/${userId}/edit`);
 }
+
+export async function deleteUser(userId: string) {
+  const session = await requireAdmin();
+
+  if (session.user.id === userId) {
+    return { error: "No podés eliminar tu propia cuenta." };
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { id: true },
+  });
+
+  if (!user) {
+    return { error: "Usuario no encontrado." };
+  }
+
+  try {
+    await prisma.user.delete({ where: { id: userId } });
+  } catch (error) {
+    return {
+      error:
+        error instanceof Error ? error.message : "No se pudo eliminar el usuario.",
+    };
+  }
+
+  revalidatePath("/dashboard/users");
+  redirect("/dashboard/users");
+}

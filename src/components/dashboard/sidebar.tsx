@@ -61,15 +61,15 @@ export function DashboardSidebar({
 
   return (
     <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col border-r border-gray-200 bg-white">
-      <div className="border-b border-gray-200 px-5 pb-4 pt-5">
+      <div className="border-b border-gray-200 px-5 pb-3 pt-4">
         <Link href="/dashboard" className="block transition-opacity hover:opacity-80">
           <AppLogo
             variant="dark"
-            width={168}
-            className="mx-auto block h-auto max-w-[88%]"
+            width={88}
+            className="mx-auto block h-auto max-w-[64%]"
             priority
           />
-          <p className="mt-2 text-center text-xs text-gray-500">{BRAND_TAGLINE}</p>
+          <p className="mt-1.5 text-center text-[11px] text-gray-500">{BRAND_TAGLINE}</p>
         </Link>
       </div>
 

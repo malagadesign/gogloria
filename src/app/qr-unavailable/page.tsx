@@ -9,7 +9,7 @@ export default function QrUnavailablePage() {
       <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-blue-50" />
 
       <div className="relative z-10 w-full max-w-md space-y-8 text-center">
-        <AppLogo variant="dark" width={160} className="mx-auto h-auto" />
+        <AppLogo variant="dark" width={96} className="mx-auto h-auto max-w-[40%]" />
 
         <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
           <h1 className="text-2xl font-semibold text-gray-900">

@@ -10,6 +10,7 @@ import { StatCard } from "@/components/dashboard/stat-card";
 import { CopyLinkButton } from "@/components/qrs/copy-link-button";
 import { QrPreview } from "@/components/qrs/qr-preview";
 import { QrScansChart } from "@/components/qrs/qr-scans-chart";
+import { DeleteConfirmButton } from "@/components/dashboard/delete-confirm-button";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,6 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getQrScanStats, getQrScansByDay } from "@/lib/analytics";
+import { deleteQrCode } from "@/lib/actions/qrs";
 import { formatCountry } from "@/lib/geo";
 import { DEVICE_TYPE_LABELS, QR_STATUS_LABELS } from "@/lib/labels";
 import { canAccessClient, type AppSession } from "@/lib/permissions";
@@ -85,6 +87,13 @@ export default async function QrDetailPage({ params }: QrDetailPageProps) {
               <Link href={`/dashboard/qrs/${qr.id}/edit`}>Cambiar destino</Link>
             </Button>
             <CopyLinkButton url={publicUrl} />
+            <DeleteConfirmButton
+              action={deleteQrCode.bind(null, qr.id)}
+              title="Eliminar QR"
+              description={`¿Eliminar "${qr.name}"? Se borrarán también todos sus escaneos y el enlace /r/${qr.slug} dejará de funcionar.`}
+              triggerLabel="Eliminar"
+              variant="outline"
+            />
           </div>
         }
       />

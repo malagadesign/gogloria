@@ -37,7 +37,7 @@ export default function LoginPage() {
         <div className="rounded-3xl border border-white/20 bg-white/95 p-8 shadow-2xl backdrop-blur-sm">
           <div className="mb-8 text-center">
             <div className="mb-4 flex justify-center">
-              <AppLogo variant="dark" width={200} className="h-auto max-w-full" />
+              <AppLogo variant="dark" width={120} className="h-auto max-w-[55%]" />
             </div>
             <h1 className="mb-2 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 bg-clip-text text-3xl font-bold text-transparent">
               {PRODUCT_NAME}

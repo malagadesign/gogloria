@@ -4,7 +4,8 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { UserForm } from "@/components/users/user-form";
-import { updateUser } from "@/lib/actions/users";
+import { DeleteConfirmButton } from "@/components/dashboard/delete-confirm-button";
+import { updateUser, deleteUser } from "@/lib/actions/users";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { isAdmin, type AppSession } from "@/lib/permissions";
@@ -32,6 +33,7 @@ export default async function EditUserPage({ params }: EditUserPageProps) {
   }
 
   const updateUserAction = updateUser.bind(null, id);
+  const canDelete = user.id !== session.user.id;
 
   return (
     <div>
@@ -39,9 +41,18 @@ export default async function EditUserPage({ params }: EditUserPageProps) {
         title={`Editar ${user.name ?? user.email}`}
         description="Actualizá datos o restablecé la contraseña del usuario."
         actions={
-          <Button asChild variant="outline">
-            <Link href="/dashboard/users">Volver</Link>
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button asChild variant="outline">
+              <Link href="/dashboard/users">Volver</Link>
+            </Button>
+            {canDelete ? (
+              <DeleteConfirmButton
+                action={deleteUser.bind(null, id)}
+                title="Eliminar usuario"
+                description={`¿Eliminar la cuenta de ${user.email}? Esta acción no se puede deshacer.`}
+              />
+            ) : null}
+          </div>
         }
       />
 

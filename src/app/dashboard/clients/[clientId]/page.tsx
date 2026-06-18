@@ -20,8 +20,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { createCampaign } from "@/lib/actions/clients";
+import { createCampaign, deleteCampaign } from "@/lib/actions/clients";
 import { canAccessClient, isAdmin, type AppSession } from "@/lib/permissions";
+import { DeleteConfirmButton } from "@/components/dashboard/delete-confirm-button";
 import { prisma } from "@/lib/prisma";
 import { getQrShortPath } from "@/lib/qr-url";
 
@@ -143,14 +144,26 @@ export default async function ClientDetailPage({ params }: ClientDetailPageProps
                 {client.campaigns.map((campaign) => (
                   <li
                     key={campaign.id}
-                    className="rounded-lg border border-border/60 px-4 py-3"
+                    className="flex items-start justify-between gap-3 rounded-lg border border-border/60 px-4 py-3"
                   >
-                    <p className="font-medium">{campaign.name}</p>
-                    <p className="text-sm text-muted-foreground">{campaign.slug}</p>
-                    {campaign.description ? (
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {campaign.description}
-                      </p>
+                    <div>
+                      <p className="font-medium">{campaign.name}</p>
+                      <p className="text-sm text-muted-foreground">{campaign.slug}</p>
+                      {campaign.description ? (
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {campaign.description}
+                        </p>
+                      ) : null}
+                    </div>
+                    {isAdmin(session) ? (
+                      <DeleteConfirmButton
+                        action={deleteCampaign.bind(null, campaign.id, client.id)}
+                        title="Eliminar campaña"
+                        description={`¿Eliminar "${campaign.name}"? Los QRs asociados quedarán sin campaña.`}
+                        triggerLabel="Eliminar"
+                        variant="ghost"
+                        size="sm"
+                      />
                     ) : null}
                   </li>
                 ))}

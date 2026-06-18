@@ -127,3 +127,62 @@ export async function createCampaign(clientId: string, formData: FormData) {
 
   revalidatePath(`/dashboard/clients/${clientId}`);
 }
+
+export async function deleteClient(clientId: string) {
+  const session = await requireSession();
+  if (!isAdmin(session)) {
+    return { error: "No tenés permisos para eliminar clientes." };
+  }
+
+  const client = await prisma.client.findUnique({
+    where: { id: clientId },
+    select: { id: true, name: true },
+  });
+
+  if (!client) {
+    return { error: "Cliente no encontrado." };
+  }
+
+  try {
+    await prisma.client.delete({ where: { id: clientId } });
+  } catch (error) {
+    return {
+      error:
+        error instanceof Error ? error.message : "No se pudo eliminar el cliente.",
+    };
+  }
+
+  revalidatePath("/dashboard/clients");
+  revalidatePath("/dashboard");
+  redirect("/dashboard/clients");
+}
+
+export async function deleteCampaign(campaignId: string, clientId: string) {
+  const session = await requireSession();
+  if (!canAccessClient(session, clientId)) {
+    return { error: "No tenés permisos para esta campaña." };
+  }
+
+  const campaign = await prisma.campaign.findFirst({
+    where: { id: campaignId, clientId },
+  });
+
+  if (!campaign) {
+    return { error: "Campaña no encontrada." };
+  }
+
+  try {
+    await prisma.campaign.delete({ where: { id: campaignId } });
+  } catch (error) {
+    return {
+      error:
+        error instanceof Error
+          ? error.message
+          : "No se pudo eliminar la campaña.",
+    };
+  }
+
+  revalidatePath(`/dashboard/clients/${clientId}`);
+  revalidatePath("/dashboard/qrs");
+  redirect(`/dashboard/clients/${clientId}`);
+}

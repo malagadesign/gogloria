@@ -2,8 +2,9 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { auth } from "@/auth";
-import { updateClient } from "@/lib/actions/clients";
+import { updateClient, deleteClient } from "@/lib/actions/clients";
 import { ClientForm } from "@/components/clients/client-form";
+import { DeleteConfirmButton } from "@/components/dashboard/delete-confirm-button";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,9 +36,16 @@ export default async function EditClientPage({ params }: EditClientPageProps) {
         title={`Editar ${client.name}`}
         description="Actualizá los datos del cliente."
         actions={
-          <Button asChild variant="outline">
-            <Link href={`/dashboard/clients/${client.id}`}>Volver</Link>
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button asChild variant="outline">
+              <Link href={`/dashboard/clients/${client.id}`}>Volver</Link>
+            </Button>
+            <DeleteConfirmButton
+              action={deleteClient.bind(null, client.id)}
+              title="Eliminar cliente"
+              description={`¿Eliminar "${client.name}"? Se borrarán sus campañas, QRs y escaneos asociados.`}
+            />
+          </div>
         }
       />
 

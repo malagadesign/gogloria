@@ -209,3 +209,34 @@ export async function getQrListWhere(
 
   return where;
 }
+
+export async function deleteQrCode(qrId: string) {
+  const session = await requireSession();
+
+  const qr = await prisma.qrCode.findUnique({
+    where: { id: qrId },
+    select: { id: true, clientId: true, name: true },
+  });
+
+  if (!qr) {
+    return { error: "QR no encontrado." };
+  }
+
+  if (!canAccessClient(session, qr.clientId)) {
+    return { error: "No tenés permisos para eliminar este QR." };
+  }
+
+  try {
+    await prisma.qrCode.delete({ where: { id: qrId } });
+  } catch (error) {
+    return {
+      error:
+        error instanceof Error ? error.message : "No se pudo eliminar el QR.",
+    };
+  }
+
+  revalidatePath("/dashboard/qrs");
+  revalidatePath("/dashboard");
+  revalidatePath(`/dashboard/clients/${qr.clientId}`);
+  redirect("/dashboard/qrs");
+}
