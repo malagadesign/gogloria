@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
 
 import { auth } from "@/auth";
 import { StatusBadge, TypeBadge } from "@/components/dashboard/badges";
@@ -27,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getQrScanStats, getQrScansByDay } from "@/lib/analytics";
+import { formatScanDateTime } from "@/lib/datetime";
 import { deleteQrCode } from "@/lib/actions/qrs";
 import { formatCountry } from "@/lib/geo";
 import { DEVICE_TYPE_LABELS, QR_STATUS_LABELS } from "@/lib/labels";
@@ -194,9 +193,7 @@ export default async function QrDetailPage({ params }: QrDetailPageProps) {
                   {qr.scans.map((scan) => (
                     <TableRow key={scan.id}>
                       <TableCell className="whitespace-nowrap">
-                        {format(scan.scannedAt, "dd MMM yyyy HH:mm", {
-                          locale: es,
-                        })}
+                        {formatScanDateTime(scan.scannedAt)}
                       </TableCell>
                       <TableCell>
                         {DEVICE_TYPE_LABELS[scan.deviceType]}
