@@ -17,13 +17,13 @@ export default async function DashboardLayout({
   const appSession = session as AppSession;
 
   return (
-    <div className="flex min-h-full bg-[#f9fafb]">
+    <div className="flex min-h-screen bg-[#f9fafb]">
       <DashboardSidebar
         userName={appSession.user.name}
         userEmail={appSession.user.email}
         role={appSession.user.role}
       />
-      <div className="flex min-h-full flex-1 flex-col">
+      <div className="flex min-h-screen flex-1 flex-col">
         <main className="flex-1 px-6 py-8 lg:px-10">{children}</main>
       </div>
     </div>

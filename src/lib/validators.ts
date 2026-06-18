@@ -93,3 +93,54 @@ export function sanitizeUrl(url: string): string {
   }
   return parsed.toString();
 }
+
+export const passwordSchema = z
+  .string()
+  .min(8, "La contraseña debe tener al menos 8 caracteres");
+
+export const userSchema = z
+  .object({
+    name: z.string().trim().min(2, "El nombre es obligatorio"),
+    email: z.string().trim().email("Email inválido"),
+    role: z.enum(["ADMIN", "CLIENT"]),
+    clientId: z.string().optional().or(z.literal("")),
+    password: z.string().optional().or(z.literal("")),
+  })
+  .superRefine((data, ctx) => {
+    if (data.role === "CLIENT" && !data.clientId) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Seleccioná un cliente para usuarios con rol Cliente.",
+        path: ["clientId"],
+      });
+    }
+
+    if (data.role === "ADMIN" && data.clientId) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Los administradores no deben tener cliente asignado.",
+        path: ["clientId"],
+      });
+    }
+  });
+
+export const createUserSchema = userSchema.superRefine((data, ctx) => {
+  if (!data.password || data.password.length < 8) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "La contraseña inicial debe tener al menos 8 caracteres.",
+      path: ["password"],
+    });
+  }
+});
+
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Ingresá tu contraseña actual"),
+    newPassword: passwordSchema,
+    confirmPassword: z.string().min(1, "Confirmá la nueva contraseña"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
+  });

@@ -1,12 +1,21 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
+import { auth } from "@/auth";
 import { createClient } from "@/lib/actions/clients";
 import { ClientForm } from "@/components/clients/client-form";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { isAdmin, type AppSession } from "@/lib/permissions";
 
-export default function NewClientPage() {
+export default async function NewClientPage() {
+  const session = (await auth()) as AppSession;
+
+  if (!isAdmin(session)) {
+    redirect("/dashboard");
+  }
+
   return (
     <div>
       <PageHeader

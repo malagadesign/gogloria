@@ -41,6 +41,7 @@ export default async function ClientDetailPage({ params }: ClientDetailPageProps
     where: { id: clientId },
     include: {
       campaigns: { orderBy: { name: "asc" } },
+      users: { orderBy: { name: "asc" } },
       qrCodes: {
         include: {
           campaign: true,
@@ -86,6 +87,48 @@ export default async function ClientDetailPage({ params }: ClientDetailPageProps
       </div>
 
       <div className="mt-8 grid gap-8 xl:grid-cols-2">
+        {isAdmin(session) ? (
+          <Card className="border-border/60 shadow-none">
+            <CardHeader className="flex flex-row items-center justify-between gap-4">
+              <CardTitle>Usuarios del cliente</CardTitle>
+              <Button asChild size="sm" variant="outline">
+                <Link href={`/dashboard/users/new?clientId=${client.id}`}>
+                  Nuevo usuario
+                </Link>
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {client.users.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  Todavía no hay usuarios asignados a este cliente.
+                </p>
+              ) : (
+                <ul className="space-y-3">
+                  {client.users.map((user) => (
+                    <li
+                      key={user.id}
+                      className="flex items-center justify-between gap-3 rounded-lg border border-border/60 px-4 py-3"
+                    >
+                      <div>
+                        <p className="font-medium">{user.name ?? user.email}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {user.email}
+                        </p>
+                      </div>
+                      <Link
+                        href={`/dashboard/users/${user.id}/edit`}
+                        className="text-sm underline-offset-4 hover:underline"
+                      >
+                        Editar
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </CardContent>
+          </Card>
+        ) : null}
+
         <Card className="border-border/60 shadow-none">
           <CardHeader>
             <CardTitle>Campañas</CardTitle>
