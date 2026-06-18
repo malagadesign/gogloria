@@ -24,7 +24,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-full items-center justify-center overflow-hidden px-4">
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-4 py-8">
       <div className="absolute inset-0 animate-gradient-shift bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600" />
 
       <div className="absolute inset-0 overflow-hidden">
@@ -124,10 +124,6 @@ export default function LoginPage() {
           </form>
 
           <p className="mt-6 text-center text-xs text-gray-500">
-            Demo: admin@agenciagloria.com / demo1234
-          </p>
-
-          <p className="mt-4 text-center text-xs text-gray-500">
             ¿Problemas para ingresar?{" "}
             <a
               href="mailto:micaela.fontan@agenciagloria.com"
