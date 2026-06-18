@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  CLIENT
+}
+
+enum QrCodeType {
+  WEBSITE
+  WHATSAPP
+  MENU
+  REVIEWS
+  PDF
+  FORM
+  PROPERTY
+  EVENT
+  OTHER
+}
+
+enum QrCodeStatus {
+  ACTIVE
+  PAUSED
+  EXPIRED
+}
+
+enum DeviceType {
+  MOBILE
+  DESKTOP
+  TABLET
+  BOT
+  UNKNOWN
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String?
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(CLIENT)
+  clientId     String?
+  client       Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Client {
+  id        String     @id @default(cuid())
+  name      String
+  slug      String     @unique
+  logoUrl   String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  users     User[]
+  campaigns Campaign[]
+  qrCodes   QrCode[]
+}
+
+model Campaign {
+  id          String   @id @default(cuid())
+  clientId    String
+  client      Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  name        String
+  slug        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  qrCodes     QrCode[]
+
+  @@unique([clientId, slug])
+}
+
+model QrCode {
+  id             String       @id @default(cuid())
+  clientId       String
+  client         Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  campaignId     String?
+  campaign       Campaign?    @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  name           String
+  slug           String       @unique
+  destinationUrl String
+  type           QrCodeType   @default(WEBSITE)
+  status         QrCodeStatus @default(ACTIVE)
+  expiresAt      DateTime?
+  primaryColor   String?
+  logoUrl        String?
+  notes          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  scans          QrScan[]
+}
+
+model QrScan {
+  id         String     @id @default(cuid())
+  qrCodeId   String
+  qrCode     QrCode     @relation(fields: [qrCodeId], references: [id], onDelete: Cascade)
+  scannedAt  DateTime   @default(now())
+  ipHash     String?
+  userAgent  String?
+  referer    String?
+  deviceType DeviceType @default(UNKNOWN)
+  browser    String?
+  os         String?
+  country    String?
+  city       String?
+
+  @@index([qrCodeId, scannedAt])
+}

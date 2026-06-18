@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 72">
+  <defs>
+    <style>
+      .ink { fill: #ffffff; }
+      .accent { fill: #ff1f00; }
+    </style>
+  </defs>
+  <rect class="ink" x="4" y="8" width="56" height="56" rx="10" fill="#ffffff"/>
+  <rect fill="#1d1d1b" x="4" y="8" width="56" height="56" rx="10"/>
+  <rect fill="#ffffff" x="14" y="18" width="14" height="14" rx="2"/>
+  <rect fill="#ffffff" x="36" y="18" width="14" height="14" rx="2"/>
+  <rect fill="#ffffff" x="14" y="40" width="14" height="14" rx="2"/>
+  <rect class="accent" x="36" y="40" width="8" height="8" rx="1"/>
+  <text class="ink" x="74" y="34" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">QR</text>
+  <text class="ink" x="74" y="56" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">Studio</text>
+  <path class="accent" d="M168,18 C176,10 188,8 200,12 C208,15 214,22 216,30 L200,30 C199,26 196,22 191,20 C185,18 178,19 174,24 Z"/>
+</svg>
