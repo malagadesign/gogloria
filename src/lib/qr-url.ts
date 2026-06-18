@@ -1,12 +1,12 @@
+import { getAppUrl, normalizeAppUrl } from "@/lib/app-url";
 import { getRequestOrigin } from "@/lib/request-origin";
 
 export function getQrPublicUrl(slug: string, origin?: string): string {
   const base =
-    process.env.NEXT_PUBLIC_QR_BASE_URL?.replace(/\/$/, "") ??
+    normalizeAppUrl(process.env.NEXT_PUBLIC_QR_BASE_URL) ??
     origin?.replace(/\/$/, "") ??
     (typeof window !== "undefined" ? window.location.origin : undefined) ??
-    process.env.AUTH_URL?.replace(/\/$/, "") ??
-    "http://localhost:3000";
+    getAppUrl();
 
   return `${base}/r/${slug}`;
 }
@@ -22,10 +22,9 @@ export function getQrShortPath(slug: string): string {
 
 export function getQrUnavailableUrl(origin?: string): string {
   const base =
-    process.env.NEXT_PUBLIC_QR_BASE_URL?.replace(/\/$/, "") ??
+    normalizeAppUrl(process.env.NEXT_PUBLIC_QR_BASE_URL) ??
     origin?.replace(/\/$/, "") ??
-    process.env.AUTH_URL?.replace(/\/$/, "") ??
-    "http://localhost:3000";
+    getAppUrl();
 
   return `${base}/qr-unavailable`;
 }
